@@ -9,7 +9,7 @@ CREATE TABLE customer (
 CREATE TABLE pos (
   id SERIAL PRIMARY KEY,
   serial TEXT NOT NULL,
-  modeL TEXT NOT NULL,
+  model TEXT NOT NULL,
   app_ver TEXT NOT NULL,
   cust_id INTEGER NOT NULL REFERENCES customer(id),
   active BOOLEAN NOT NULL
@@ -25,4 +25,7 @@ CREATE TABLE transactions (
   status BOOLEAN NOT NULL,
   pos_id INTEGER NOT NULL REFERENCES pos(id)
 );
+
+---- add dummy data for all tables ---
+
 
