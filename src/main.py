@@ -6,23 +6,22 @@ Email: alvarogodoyg@gmail.com
 """
 
 import csv
-import time
-import db_connection
+import sys
+from time import strftime
+from db_connection import connection as DbConnection
 
-MONTH = "1"
+try:
+    MONTH = sys.argv[1] if len(sys.argv) > 1 and 1 <= int(sys.argv[1]) <= 12 else strftime("%m")
+    print(f'I\'m using Month {MONTH or "current month"}')
+except (IndexError, ValueError):
+    print('Invalid month entered, should be a number between 1 and 12')
+    sys.exit(1)
 
-connection = db_connection.connection
+connection = DbConnection
 cursor = connection.cursor()
 
-
-def dummy_loop():
-    while True:
-        print('Hola')
-        time.sleep(5)
-
-
 def __main__():
-    sql = """
+    sql = f"""
         select
             c.fiscal_id as fiscal_id,
             c.cust_name as name,
@@ -38,9 +37,12 @@ def __main__():
             t.cust_id = c.id
         left join pos p on
             t.pos_id = p.id
+        where
+            extract(month from t.created_at) = {MONTH}
+            and t.status = true
     """
 
-    with open('./files/reporte_' + MONTH + '.csv', 'w', encoding='utf8') as f:
+    with open('./files/report_' + MONTH + '.csv', 'w', encoding='utf8') as f:
         writer = csv.writer(f)
 
         writer.writerow([
@@ -54,14 +56,16 @@ def __main__():
             'serial_pos'
         ])
 
-        # results = cursor.execute(sql).fetrchall()
+        cursor.execute(sql)
+        results = cursor.fetchall()
 
-        # for row in results:
-        #     writer.writerow(row)
+        for row in results:
+            writer.writerow(row)
 
-        print('File created ' + 'reporte_' + MONTH + '.csv')
+        print('File created with name > ' + 'report_' + MONTH + '.csv')
 
     connection.close()
 
 
-dummy_loop()
+if __name__ == '__main__':
+    __main__()
