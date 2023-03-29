@@ -2,26 +2,25 @@ help:
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  start   Start the containers"
-	@echo "  logs    Show the logs"
-	@echo "  sh      Open a shell in the app container"
-	@echo "  restart Restart the containers"
-	@echo "  build   Build the containers"
-	@echo "  stop    Stop the containers"
-	@echo "  down    Stop and remove the containers"
-	@echo "  dev     Build, start and show the logs"
+	@echo "  start       Start the containers"
+	@echo "  logs        Show the logs"
+	@echo "  sh          Open a shell in the container"
+	@echo "  restart     Restart the containers"
+	@echo "  build       Build the containers"
+	@echo "  stop        Stop the containers"
+	@echo "  down        Stop and remove the containers"
+	@echo "  seeder      Run the seeder"
 
+run:
+	@python ./src/main.py $(month);
 
 start:
 	@docker-compose up -d;
 
 logs:
-	@docker-compose logs app -f;
+	@docker-compose logs -f;
 
-app-sh:
-	@docker-compose exec app sh;
-
-db-sh:
+sh:
 	@docker-compose exec db sh;
 
 restart:
@@ -36,8 +35,5 @@ stop:
 down:
 	@docker-compose down;
 
-dev:
-	@make build && make start && make logs;
-
 seeder:
-	@docker-compose exec app python seeder.py;
+	@python ./src/seeder.py;
