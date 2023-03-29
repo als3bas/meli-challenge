@@ -20,7 +20,10 @@ except (IndexError, ValueError):
 connection = create_connection()
 cursor = connection.cursor()
 
-def __main__():
+def main():
+    '''
+    Main function.
+    '''
     filename = './files/report_' + month + '.csv'
     sql = get_transactions_query(month, status=True)
     with open(filename, 'w', encoding='utf8') as file:
@@ -47,4 +50,4 @@ def __main__():
 
 
 if __name__ == '__main__':
-    __main__()
+    main()

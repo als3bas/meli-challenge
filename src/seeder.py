@@ -16,6 +16,9 @@ CHANCE_OF_TRUE = 70
 
 
 def customer_seeder(cursor):
+    '''
+    Seed customer table
+    '''
     customer_query = """
       INSERT INTO customer (cust_name, fiscal_id, email, address) VALUES (%s, %s, %s, %s)
       """
@@ -31,6 +34,9 @@ def customer_seeder(cursor):
 
 
 def pos_seeder(cursor):
+    '''
+    Seed pos table
+    '''
     pos_query = """
     INSERT INTO pos (serial, model, app_ver, cust_id, active) VALUES (%s, %s, %s, %s, %s)
     """
@@ -47,6 +53,9 @@ def pos_seeder(cursor):
 
 
 def transaction_seeder(cursor):
+    '''
+    Seed transaction table
+    '''
     transaction_query = """
     INSERT INTO transactions (cust_id, pmeth_id, cod_aut, created_at, amount, status, pos_id) VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
@@ -67,6 +76,9 @@ def transaction_seeder(cursor):
 
 
 def main():
+    '''
+    Main function
+    '''
     connection = create_connection()
     cur = connection.cursor()
 
@@ -78,6 +90,7 @@ def main():
         connection.commit()
         transaction_seeder(cur)
         connection.commit()
+        print('Seeder finished successfully!')
     except Exception as error:
         print(error)
         connection.rollback()
@@ -85,4 +98,5 @@ def main():
         connection.close()
 
 
-main()
+if __name__ == '__main__':
+    main()

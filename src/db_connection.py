@@ -15,7 +15,12 @@ password = os.environ.get('DB_PASSWORD')
 host = os.environ.get('DB_HOST')
 port = os.environ.get('DB_PORT')
 
-def create_connection():
+def create_connection() -> psycopg2.extensions.connection:
+    '''
+    Create a connection to the database
+    Returns:
+        connection: Connection to the database
+    '''
     connection = psycopg2.connect(
         dbname=dbname,
         user=user,
@@ -25,7 +30,12 @@ def create_connection():
     )
     return connection
 
-def get_transactions_query(month, status=True):
+def get_transactions_query(month, status=True) -> str:
+    '''
+    Get the query to get the transactions
+    Returns:
+        query: Query to get the transactions
+    '''
     return f"""
         SELECT c.fiscal_id AS fiscal_id,
                c.cust_name AS name,
