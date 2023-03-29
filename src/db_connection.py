@@ -4,6 +4,9 @@ This file is used to connect to the database.
 
 import os
 import psycopg2
+from dotenv import load_dotenv
+
+load_dotenv()
 
 dbname = os.environ.get('DB_NAME')
 user = os.environ.get('DB_USER')
