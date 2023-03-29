@@ -2,12 +2,14 @@ version: '3.7'
 
 services:
   app:
+    container_name: python-app
     build:
       context: .
       dockerfile: Dockerfile
     command: python main.py
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - ./src:/usr/src/app
       - ./files:/usr/src/app/files
@@ -21,6 +23,7 @@ services:
       - challenge
 
   db:
+    container_name: postgres-db
     image: postgres:12
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -31,11 +34,17 @@ services:
       POSTGRES_DB: postgres
     ports:
       - 5432:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - challenge
 
 networks:
   challenge:
+
 
 volumes:
   db_data:

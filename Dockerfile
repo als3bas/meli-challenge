@@ -4,6 +4,7 @@ RUN apk update \
   build-base \
   postgresql \
   postgresql-dev \
+  bash \
   git \
   libpq
 
