@@ -5,7 +5,7 @@ Seeder for meli challenge
 import datetime
 import chile_rut
 from faker import Faker
-from db_connection import connection as DbConnection
+from db_connection import create_connection
 
 fake = Faker('es_ES')
 
@@ -67,7 +67,7 @@ def transaction_seeder(cursor):
 
 
 def main():
-    connection = DbConnection
+    connection = create_connection()
     cur = connection.cursor()
 
     # Seeders
