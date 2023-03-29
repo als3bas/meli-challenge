@@ -1,12 +1,18 @@
 """
 Seeder for meli challenge
 """
-from faker import Faker
+
+import datetime
 import chile_rut
-import db_connection
+from faker import Faker
+from db_connection import connection as DbConnection
+
 fake = Faker('es_ES')
 
-CUSTOMER_QTY=40
+CUSTOMER_QTY = 50
+POS_QTY = 30
+TRANSACTIONS_QTY = 500
+CHANCE_OF_TRUE = 70
 
 
 def customer_seeder(cursor):
@@ -14,7 +20,7 @@ def customer_seeder(cursor):
       INSERT INTO customer (cust_name, fiscal_id, email, address) VALUES (%s, %s, %s, %s)
       """
     customer_data = []
-    for _ in range(CUSTOMER_QTY - 1):
+    for _ in range(CUSTOMER_QTY):
         customer_data.append((
             fake.name(),
             chile_rut.random_rut(),
@@ -29,13 +35,13 @@ def pos_seeder(cursor):
     INSERT INTO pos (serial, model, app_ver, cust_id, active) VALUES (%s, %s, %s, %s, %s)
     """
     pos_data = []
-    for _ in range(30):
+    for _ in range(POS_QTY):
         pos_data.append((
             fake.unique.ean(length=13),
             fake.unique.sbn9(separator='-'),
             fake.random_int(min=1, max=5),
-            fake.random_int(min=1, max=CUSTOMER_QTY - 1),
-            fake.boolean(chance_of_getting_true=80)
+            fake.random_int(min=1, max=CUSTOMER_QTY),
+            fake.boolean(chance_of_getting_true=CHANCE_OF_TRUE)
         ))
     cursor.executemany(pos_query, pos_data)
 
@@ -45,21 +51,23 @@ def transaction_seeder(cursor):
     INSERT INTO transactions (cust_id, pmeth_id, cod_aut, created_at, amount, status, pos_id) VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     transaction_data = []
-    for _ in range(400):
+    start_date = datetime.datetime(2023, 1, 1)
+    end_date = datetime.datetime(2023, 12, 31)
+    for _ in range(TRANSACTIONS_QTY):
         transaction_data.append((
-            fake.random_int(min=1, max=CUSTOMER_QTY - 1),
-            fake.random_element(elements=(30,31,13)),
+            fake.random_int(min=1, max=CUSTOMER_QTY),
+            fake.random_element(elements=(30, 31, 13)),
             fake.unique.ean(length=8),
-            fake.date_time_between(start_date='-1y', end_date='now'),
+            fake.date_time_between(start_date=start_date, end_date=end_date),
             fake.random_int(min=1000, max=100000),
-            fake.boolean(chance_of_getting_true=80),
-            fake.random_int(min=1, max=30)
+            fake.boolean(chance_of_getting_true=CHANCE_OF_TRUE),
+            fake.random_int(min=1, max=POS_QTY)
         ))
     cursor.executemany(transaction_query, transaction_data)
 
 
 def main():
-    connection = db_connection.connection
+    connection = DbConnection
     cur = connection.cursor()
 
     # Seeders
