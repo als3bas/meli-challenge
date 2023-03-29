@@ -30,7 +30,7 @@ def create_connection() -> psycopg2.extensions.connection:
     )
     return connection
 
-def get_transactions_query(month, status=True) -> str:
+def get_transactions_query(month: int, status:bool = True) -> str:
     '''
     Get the query to get the transactions
     Returns:
