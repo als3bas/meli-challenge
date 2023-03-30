@@ -1,5 +1,5 @@
 # Prueba técnica nuevo ingreso
-* [Documento con el challenge solicitado](./files/prueba.pdf)
+* <s>[Documento con el challenge solicitado](./files/prueba.pdf)</s> (Borrado por privacidad)
 
 # Como empezar
 
